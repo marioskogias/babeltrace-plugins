@@ -5,8 +5,10 @@ import sys
 import json
 import getopt
 from babeltrace import *
+from scribe_client import ScribeClient
 
 HELP = "Usage: python babeltrace_zipkin.py path/to/file -s <server> -p <port>"
+CATEGORY = "LTTng"
 
 def main(argv):
     try:
@@ -27,7 +29,8 @@ def main(argv):
         elif opt == '-p':
             port = arg
 
-    print(path, server, port)
+    # Open connection with scribe
+    scribe_client = ScribeClient(port,  server)
 
     # Create TraceCollection and add trace:
     traces = TraceCollection()
@@ -43,13 +46,14 @@ def main(argv):
         data['cycles'] = event.timestamp
 
         for k,v in event.items():
-            print k
             field_type = event._field(k).type
             data[k] = format_value(field_type, v)
 
         json_data = json.dumps(data)
-        print json_data
-        break
+        scribe_client.log(CATEGORY, json_data)
+
+    #send data to scribe
+    scribe_client.close()
 
 def format_value(field_type, value):
 
