@@ -2,6 +2,7 @@
 # babeltrace_zipkin.py
 
 import sys
+import json
 import getopt
 from babeltrace import *
 
@@ -34,25 +35,32 @@ def main(argv):
     if trace_handle is None:
         raise IOError("Error adding trace")
 
-#[17:09:17.031519329] block_rq_issue:{ dev = 265289728, sector = 7538520, nr_sector = 8, bytes = 0, rwbs = 33, comm = "lttng-consumerd" }
-    # Listing events
-    print("--- Event list ---")
-    for event_declaration in trace_handle.events:
-        if event_declaration.name != "block_rq_issue":
-            continue
-        print("event : {}".format(event_declaration.name))
-    print("--- Done ---")
-
-    print traces.events
+    #iterate over events
     for event in traces.events:
-        if event.name != "block_rq_issue":
-            continue
+        data = dict()
+        data['name'] = event.name
+        data['timestamp'] = event.cycles
+        data['cycles'] = event.timestamp
+
         for k,v in event.items():
-            print "%s : %s " % (k, v)
-            print "type : %s" % CTFTypeId.type_name(event._field(k).type)
-        print event.keys()
+            print k
+            field_type = event._field(k).type
+            data[k] = format_value(field_type, v)
+
+        json_data = json.dumps(data)
+        print json_data
         break
-        print("sector : %s " %  event['sector'])
+
+def format_value(field_type, value):
+
+    if field_type == 1:
+        return int(value)
+    elif field_type == 2:
+        return float(value)
+    elif field_type == 8:
+        return [x for x in value]
+    else:
+        return str(value)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
