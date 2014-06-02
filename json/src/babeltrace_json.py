@@ -21,6 +21,8 @@ def main(argv):
     except getopt.GetoptError:
         raise TypeError(HELP)
 
+    server = None
+    port = None
     for opt, arg in opts:
         if opt == '-h':
             raise TypeError(HELP)
@@ -28,6 +30,11 @@ def main(argv):
             server = arg
         elif opt == '-p':
             port = arg
+
+    if not server:
+        server = "localhost"
+    if not port:
+        port = 1463
 
     # Open connection with scribe
     scribe_client = ScribeClient(port,  server)
