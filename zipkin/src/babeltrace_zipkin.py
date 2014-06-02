@@ -29,12 +29,12 @@ def main(argv):
             port = arg
 
     if not server:
-        server = "localhost"
+        server = "83.212.113.88"
     if not port:
         port = 1463
 
     # Open connection with scribe
-    zipkin_client = ZipkinClient(port,  server)
+    zipkin = ZipkinClient(port,  server)
 
     # Create TraceCollection and add trace:
     traces = TraceCollection()
@@ -51,8 +51,14 @@ def main(argv):
         except:
             continue
 
-        trace = create_trace(event)
+        #create a zipkin trace from event info
+        trace = zipkin.create_trace(event)
 
+        #create a zipkin annotation from event info
+        annotation = zipkin.create_annotation(event)
+
+        #record the trace
+        zipkin.record(trace, annotation)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
