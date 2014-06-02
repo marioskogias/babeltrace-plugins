@@ -1,17 +1,3 @@
-# Copyright 2012 Rackspace Hosting, Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import math
 import time
 import random
@@ -39,7 +25,7 @@ class Trace(object):
         self.name = name
         # If no trace_id and span_id are given we want to generate new
         # 64-bit integer ids.
-        self.trace_id = trace_id 
+        self.trace_id = trace_id
         self.span_id = span_id
 
         # If no parent_span_id is given then we assume there is no parent span
@@ -53,7 +39,6 @@ class Trace(object):
         # to this trace.
         self._endpoint = None
 
-
     def __ne__(self, other):
         return not self == other
 
@@ -62,7 +47,6 @@ class Trace(object):
             '{0.__class__.__name__}({0.name!r}, trace_id={0.trace_id!r}, '
             'span_id={0.span_id!r}, parent_span_id={0.parent_span_id!r})'
         ).format(self)
-
 
     def set_endpoint(self, endpoint):
         """
@@ -84,7 +68,6 @@ class Endpoint(object):
         self.ipv4 = ipv4
         self.port = port
         self.service_name = service_name
-
 
     def __ne__(self, other):
         return not self == other
@@ -112,7 +95,6 @@ class Annotation(object):
         self.value = value
         self.annotation_type = annotation_type
         self.endpoint = endpoint
-
 
     def __ne__(self, other):
         return not self == other
@@ -153,4 +135,3 @@ class Annotation(object):
     @classmethod
     def bytes(cls, name, value):
         return cls(name, value, 'bytes')
-

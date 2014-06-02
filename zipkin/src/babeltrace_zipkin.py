@@ -7,6 +7,7 @@ from babeltrace import *
 from zipkin_logic.zipkin_client import ZipkinClient
 HELP = "Usage: python babeltrace_zipkin.py path/to/file -s <server> -p <port>"
 
+
 def main(argv):
     try:
         path = argv[0]
@@ -14,7 +15,7 @@ def main(argv):
         raise TypeError(HELP)
 
     try:
-      opts, args = getopt.getopt(argv[1:],"hs:p:")
+        opts, args = getopt.getopt(argv[1:], "hs:p:")
     except getopt.GetoptError:
         raise TypeError(HELP)
 

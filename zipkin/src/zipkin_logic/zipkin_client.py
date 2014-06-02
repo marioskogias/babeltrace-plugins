@@ -5,6 +5,7 @@ from trace import Annotation, Trace, Endpoint
 from collections import defaultdict
 from formatters import base64_thrift_formatter
 
+
 class ZipkinClient(ScribeClient):
 
     DEFAULT_END_ANNOTATIONS = ("ss", "cr")
@@ -23,28 +24,27 @@ class ZipkinClient(ScribeClient):
         trace = Trace(service, trace_id, span_id, parent_span)
         return trace
 
-    def create_annotation(self,event, kind):
+    def create_annotation(self, event, kind):
         if kind == "keyval":
             key = event["key"]
             val = event["val"]
-            annotation =  Annotation.string(key, val)
+            annotation = Annotation.string(key, val)
         elif kind == "timestamp":
             timestamp = event.timestamp
             #timestamp has different digit length
             timestamp = str(timestamp)
             timestamp = timestamp[:-3]
             event_name = event["event"]
-            annotation =  Annotation.timestamp(event_name, int(timestamp))
+            annotation = Annotation.timestamp(event_name, int(timestamp))
 
         #  create and set endpoint
         port = event["port_no"]
         service = event["service_name"]
-        endpoint = Endpoint("0.0.0.0",int(port), service)
+        endpoint = Endpoint("0.0.0.0", int(port), service)
         annotation.endpoint = endpoint
 
         print annotation
         return annotation
-
 
     def record(self, trace, annotation):
         trace_key = (trace.trace_id, trace.span_id)

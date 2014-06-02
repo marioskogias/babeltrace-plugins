@@ -10,6 +10,7 @@ from scribe_client import ScribeClient
 HELP = "Usage: python babeltrace_zipkin.py path/to/file -s <server> -p <port>"
 CATEGORY = "LTTng"
 
+
 def main(argv):
     try:
         path = argv[0]
@@ -17,7 +18,7 @@ def main(argv):
         raise TypeError(HELP)
 
     try:
-      opts, args = getopt.getopt(argv[1:],"hs:p:")
+        opts, args = getopt.getopt(argv[1:], "hs:p:")
     except getopt.GetoptError:
         raise TypeError(HELP)
 
@@ -52,15 +53,17 @@ def main(argv):
         data['timestamp'] = event.cycles
         data['cycles'] = event.timestamp
 
-        for k,v in event.items():
+        for k, v in event.items():
             field_type = event._field(k).type
             data[k] = format_value(field_type, v)
 
         json_data = json.dumps(data)
+
+        #send data to scribe
         scribe_client.log(CATEGORY, json_data)
 
-    #send data to scribe
     scribe_client.close()
+
 
 def format_value(field_type, value):
 
