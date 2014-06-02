@@ -5,7 +5,7 @@ from scribe import scribe
 from thrift.transport import TTransport, TSocket
 from thrift.protocol import TBinaryProtocol
 
-class ScribeClient:
+class ScribeClient(object):
 
     def __init__(self, port, host):
         self.port = port
