@@ -31,7 +31,8 @@ class ZipkinClient(ScribeClient):
         elif kind == "timestamp":
             timestamp = event.timestamp
             #timestamp has different digit length
-            #timestamp = timestamp[:-3]
+            timestamp = str(timestamp)
+            timestamp = timestamp[:-3]
             event_name = event["event"]
             annotation =  Annotation.timestamp(event_name, int(timestamp))
 

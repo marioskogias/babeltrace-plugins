@@ -8,6 +8,7 @@ from thrift.protocol import TBinaryProtocol
 class ScribeClient(object):
 
     def __init__(self, port, host):
+        print host
         self.port = port
         self.host = host
         self.openConnection()
