@@ -55,7 +55,7 @@ def main(argv):
         trace = zipkin.create_trace(event)
 
         #create a zipkin annotation from event info
-        annotation = zipkin.create_annotation(event)
+        annotation = zipkin.create_annotation(event, kind)
 
         #record the trace
         zipkin.record(trace, annotation)
