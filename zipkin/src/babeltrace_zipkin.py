@@ -4,7 +4,7 @@
 import sys
 import getopt
 from babeltrace import *
-from zipkin_client import ZipkinClient
+from zipkin_logic.zipkin_client import ZipkinClient
 HELP = "Usage: python babeltrace_zipkin.py path/to/file -s <server> -p <port>"
 
 def main(argv):
@@ -59,6 +59,8 @@ def main(argv):
 
         #record the trace
         zipkin.record(trace, annotation)
+
+    zipkin.close()
 
 if __name__ == "__main__":
     main(sys.argv[1:])
