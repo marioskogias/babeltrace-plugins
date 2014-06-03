@@ -19,7 +19,7 @@ TRACEPOINT_EVENT(
 	TP_ARGS(char *, service,
             int, port, long, trace, 
             long, span, long, parent_span, 
-            long, key, char *, val ),
+            char *, key, char *, val ),
 	
 	TP_FIELDS(
 		ctf_string(service_name, service)
@@ -27,7 +27,7 @@ TRACEPOINT_EVENT(
 		ctf_integer(long, trace_id, trace)
     	ctf_integer(long, span_id, span)
 		ctf_integer(long, parent_span_id, parent_span)
-        ctf_integer(long, key, key)
+        ctf_string(key, key)
         ctf_string(val, val)
 	) 
 )
@@ -43,7 +43,7 @@ TRACEPOINT_EVENT(
 	TP_ARGS(char *, service,
             int, port, long, trace, 
             long, span, long, parent_span, 
-            long, key, long, time ),
+            char *, event),
 	
 	TP_FIELDS(
 		ctf_string(service_name, service)
@@ -51,8 +51,7 @@ TRACEPOINT_EVENT(
 		ctf_integer(long, trace_id, trace)
     	ctf_integer(long, span_id, span)
 		ctf_integer(long, parent_span_id, parent_span)
-        ctf_integer(long, key, key)
-        ctf_integer(long, time, time)
+		ctf_string(event, event)
 	) 
 )
 TRACEPOINT_LOGLEVEL(
