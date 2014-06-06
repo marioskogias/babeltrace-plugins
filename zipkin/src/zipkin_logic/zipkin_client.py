@@ -40,7 +40,8 @@ class ZipkinClient(ScribeClient):
         #  create and set endpoint
         port = event["port_no"]
         service = event["service_name"]
-        endpoint = Endpoint("0.0.0.0", int(port), service)
+        ip = event["ip"]
+        endpoint = Endpoint(ip, int(port), service)
         annotation.endpoint = endpoint
 
         print annotation
