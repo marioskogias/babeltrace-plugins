@@ -8,14 +8,14 @@ from formatters import base64_thrift_formatter
 
 class ZipkinClient(ScribeClient):
 
-    DEFAULT_END_ANNOTATIONS = ("ss", "cr")
+    DEFAULT_END_ANNOTATIONS = ("ss", "cr", "end")
 
     def __init__(self, port, host):
         super(ZipkinClient, self).__init__(port, host)
         self._annotations_for_trace = defaultdict(list)
 
     def create_trace(self, event):
-        service = event["service_name"]
+        service = event["trace_name"]
         trace_id = event["trace_id"]
         span_id = event["span_id"]
         parent_span = event["parent_span_id"]
