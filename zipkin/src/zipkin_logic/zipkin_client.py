@@ -25,29 +25,38 @@ class ZipkinClient(ScribeClient):
         return trace
 
     def create_annotation(self, event, kind):
+        #  create and set endpoint
+        port = event["port_no"]
+        service = event["service_name"]
+        ip = event["ip"]
+        endpoint = Endpoint(ip, int(port), service)
         if kind == "keyval":
             key = event["key"]
             val = event["val"]
             annotation = Annotation.string(key, val)
         elif kind == "timestamp":
-            timestamp = event.timestamp
+            print event.timestamp
+            timestamp = event.timestamp + int(event["skew"])*1000
+            print timestamp
+            '''
+            if ip == "10.0.0.1":
+                timestamp += 2500000
+            else:
+                timestamp += 639000
+            '''
             #timestamp has different digit length
             timestamp = str(timestamp)
             timestamp = timestamp[:-3]
             event_name = event["event"]
             annotation = Annotation.timestamp(event_name, int(timestamp))
 
-        #  create and set endpoint
-        port = event["port_no"]
-        service = event["service_name"]
-        ip = event["ip"]
-        endpoint = Endpoint(ip, int(port), service)
         annotation.endpoint = endpoint
-
-        print annotation
         return annotation
 
     def record(self, trace, annotation):
+        self.scribe_log(trace, [annotation])
+        print "send"
+        '''
         trace_key = (trace.trace_id, trace.span_id)
         self._annotations_for_trace[trace_key].append(annotation)
         if (annotation.name in self.DEFAULT_END_ANNOTATIONS):
@@ -55,7 +64,7 @@ class ZipkinClient(ScribeClient):
             del self._annotations_for_trace[trace_key]
             self.scribe_log(trace, saved_annotations)
         print "Record event"
-
+        '''
     def scribe_log(self, trace, annotations):
         trace._endpoint = None
         message = base64_thrift_formatter(trace, annotations)
